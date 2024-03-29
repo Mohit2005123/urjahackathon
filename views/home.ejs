@@ -116,6 +116,7 @@ const sendBtn = document.getElementById("send-btn");
 
 sendBtn.addEventListener("click", async function() {
     const userMessage = userInput.value;
+    userInput.value='';
     console.log(userMessage);
     appendMessage("You", userMessage);
     const response= await axios.get(`/api/data/${userMessage}`);
@@ -123,7 +124,7 @@ sendBtn.addEventListener("click", async function() {
     let answer=data;
     appendMessage('Bot', answer);
     // Call function to send userMessage to the chatbot backend
-    userInput.value = "";
+  
 });
 
 function appendMessage(sender, message) {
