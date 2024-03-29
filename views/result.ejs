@@ -11,26 +11,41 @@
         <%=text%>
     </p>
 
+    <p>
+
+    </p>
     <div id="myChart" style="width:100%; max-width:600px; height:500px;"></div>
     <script>
-      const objdata = JSON.parse("<%= JSON.stringify(obj) %>");
+
+function decodeEntities(encodedString) {
+            var textArea = document.createElement('textarea');
+            textArea.innerHTML = encodedString;
+            return textArea.value;
+        }
+
+        var encodedJSON = '<%= JSON.stringify(obj) %>';
+        var decodedJSON = decodeEntities(encodedJSON);
+        var obj = JSON.parse(decodedJSON);
+        console.log(obj);
+      // const objdata = JSON.parse('<%= JSON.stringify(obj) %>');
+      // console.log(objdata);
         google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawChart);
         function drawChart() {
             const data = google.visualization.arrayToDataTable([
                 ['Months', 'Kwh'],
-                ['January', 100],
-                ['February', 200],
-                ['March', 300],
-                ['April', 400],
-                ['May', 500],
-                ['June', 600],
-                ['July', 700],
-                ['August', 800],
-                ['September', 900],
-                ['October', 1000],
-                ['November', 1100],
-                ['December', 1200]
+                ['January', parseInt(obj.January)],
+                ['February', parseInt(obj.February)],
+                ['March', parseInt(obj.March)],
+                ['April', parseInt(obj.April)],
+                ['May', parseInt(obj.May)],
+                ['June', parseInt(obj.June)],
+                ['July', parseInt(obj.July)],
+                ['August', parseInt(obj.August)],
+                ['September', parseInt(obj.September)],
+                ['October', parseInt(obj.October)],
+                ['November', parseInt(obj.November)],
+                ['December', parseInt(obj.December)]
             ]);
 
             const options = {
