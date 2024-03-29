@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar Energy Chatbot</title>
+    <style>
+
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.chat-container {
+  max-width: 400px;
+  margin: 50px auto;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.chat-box {
+  min-height: 200px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+#user-input {
+  width: 70%;
+  padding: 8px;
+  margin-right: 5px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+
+#send-btn {
+  padding: 8px 20px;
+  background-color: #32a852;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+#send-btn:hover {
+  background-color: #2a7f45;
+}
+
+.chat-container::before {
+  content: "URJA";
+  display: block;
+  background-color: #32a852;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 10px 10px 0 0;
+}
+
+.chat-container::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+#send-btn {
+  padding: 8px 20px;
+  background-color: #32a852;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+#voice-btn {
+  padding: 8px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+            <!-- Chat messages will be displayed here -->
+        </div>
+    
+            <input type="text" id="user-input" placeholder="Type a message...">
+            <button id="send-btn">Send</button>
+     
+        
+        <button id="voice-btn">Activate Voice Assistant</button>
+        
+    </div>
+    <form action="/form" method="get">
+        <button>Review your Electricity Bill</button>
+    </form>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+const chatBox = document.getElementById("chat-box");
+const sendBtn = document.getElementById("send-btn");
+
+sendBtn.addEventListener("click", async function() {
+    const userMessage = userInput.value;
+    console.log(userMessage);
+    appendMessage("You", userMessage);
+    const response= await axios.get(`/api/data/${userMessage}`);
+    const data= response.data;
+    let answer=data;
+    appendMessage('Bot', answer);
+    // Call function to send userMessage to the chatbot backend
+    userInput.value = "";
+});
+
+function appendMessage(sender, message) {
+    const messageElement = document.createElement("div");
+    messageElement.innerText = `${sender}: ${message}`;
+    chatBox.appendChild(messageElement);
+}
+
+const voiceBtn = document.getElementById("voice-btn");
+const userInput = document.getElementById("user-input");
+
+voiceBtn.addEventListener("click", function() {
+    const recognition = new (webkitSpeechRecognition || SpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.start();
+
+    recognition.onresult = function(event) {
+        const userMessage = event.results[0][0].transcript;
+        userInput.value = userMessage;
+    };
+});
+
+    </script>
+</body>
+</html>
