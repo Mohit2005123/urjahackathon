@@ -37,6 +37,9 @@ app.get('/', (req, res)=>{
 app.get('/form', (req, res)=>{
     res.render('form');
 });
+app.get('/temp', (req, res)=>{
+  res.render('tempresult');
+})
 app.post('/submit', async(req, res)=>{
     let obj= req.body;
     let string= JSON.stringify(obj);
