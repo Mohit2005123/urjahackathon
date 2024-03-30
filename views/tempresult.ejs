@@ -275,13 +275,17 @@ header h2 {
 
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
-
+      let ismicon= false;
       const chatbotToggler = document.querySelector(".chatbot-toggler");
 const closeBtn = document.querySelector(".close-btn");
 const chatbox = document.querySelector(".chatbox");
 const chatInput = document.querySelector(".chat-input textarea");
 const sendChatBtn = document.querySelector(".chat-input span");
       function startDictation() {
+      let dictationbutton= document.getElementById('recordVoiceButton');
+      if(ismicon== false){
+        dictationbutton.innerHTML='🔴';
+        ismicon= true;
         const recognition =  new (webkitSpeechRecognition || SpeechRecognition)();
         recognition.lang= 'en-US';
         recognition.start();
@@ -289,6 +293,12 @@ const sendChatBtn = document.querySelector(".chat-input span");
             const userMessage= event.results[0][0].transcript;
             chatInput.value= userMessage;
         }
+      }
+      else{
+        dictationbutton.innerHTML='🎙️';
+        ismicon= false;
+      }
+        
       }
      
 
