@@ -22,7 +22,22 @@ main()
   .catch((err) => {
     console.log(err);
   });
-
+  function calculateSolarPanelCount(roofArea, panelEfficiency) {
+    // Assuming roofArea is in square meters and panelEfficiency is a decimal (e.g., 0.18 for 18% efficiency)
+    let totalPanelArea = parseFloat(roofArea) * panelEfficiency; // Adjusted roof area based on panel efficiency
+    let panelArea = 1.6; // Average area of a standard solar panel in square meters (adjust as needed)
+    let panelCount = Math.ceil(totalPanelArea / panelArea); // Round up to ensure full coverage
+    if(panelCount!=NaN){
+      return panelCount;
+    }
+   
+}
+function calculatingcost(capacity, numberofpanels){
+  if(capacity>10){
+    return (470000*numberofpanels);
+  }
+  return solarSystemCosts[capacity-1]*numberofpanels;
+}
 async function main() {
   await mongoose.connect(MONGO_URL);
 }
@@ -54,7 +69,70 @@ app.get('/api/data/:chat', async(req, res)=>{
   let prompt= query.chat;
   let answer=  await run(prompt);
   res.json(answer);
+});
+app.get('/solarcal', (req, res)=>{
+  res.render('solarcalform', {indianStates});
+});
+app.post('/solarcal', (req, res)=>{
+  let solardata= req.body;
+  console.log(solardata);
+  let roofArea= solardata.roofarea;
+  let numberofpanels=  calculateSolarPanelCount(roofArea, 0.3);
+  // Assuming 30% percent efficiency here
+  console.log(numberofpanels);
+  let requiredenergypersolarpanel= Math.floor(solardata.requiredusage/(numberofpanels));
+  console.log(requiredenergypersolarpanel);
+  let totalcost=calculatingcost(requiredenergypersolarpanel, numberofpanels);
+  res.render('solarcalculated', {numberofpanels, requiredenergypersolarpanel, totalcost});
 })
 app.listen(3000, ()=>{
     console.log('App is listening to port 3000');
 });
+
+const indianStates = [
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+  "Andaman and Nicobar Islands",
+  "Chandigarh",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Lakshadweep",
+  "Delhi",
+  "Puducherry"
+];
+const solarSystemCosts=[
+  70000,
+  125000,
+  170000,
+  205000,
+  295000,
+  325000,
+  380000,
+  415000,
+  460000
+];
