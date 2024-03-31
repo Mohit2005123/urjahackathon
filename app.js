@@ -22,21 +22,34 @@ main()
   .catch((err) => {
     console.log(err);
   });
-  function calculateSolarPanelCount(roofArea, panelEfficiency) {
-    // Assuming roofArea is in square meters and panelEfficiency is a decimal (e.g., 0.18 for 18% efficiency)
-    let totalPanelArea = parseFloat(roofArea) * panelEfficiency; // Adjusted roof area based on panel efficiency
-    let panelArea = 1.6; // Average area of a standard solar panel in square meters (adjust as needed)
-    let panelCount = Math.ceil(totalPanelArea / panelArea); // Round up to ensure full coverage
-    if(panelCount!=NaN){
-      return panelCount;
-    }
+//   function calculateSolarPanelCount(roofArea, panelEfficiency) {
+//     // Assuming roofArea is in square meters and panelEfficiency is a decimal (e.g., 0.18 for 18% efficiency)
+//     let totalPanelArea = parseFloat(roofArea) * panelEfficiency; // Adjusted roof area based on panel efficiency
+//     let panelArea = 5; // Average area of a standard solar panel in square meters (adjust as needed)
+//     let panelCount = Math.ceil(totalPanelArea / panelArea); // Round up to ensure full coverage
+//     if(panelCount!=NaN){
+//       return panelCount;
+//     }
    
+// }
+
+function calculateSolarPanels(monthlyusage) {
+  let yearlyusage= monthlyusage*12;
+  return Math.floor((yearlyusage/1.6)/320);
+}
+function capacityofsolarpanel(monthlyusage){
+  return Math.floor(monthlyusage/120);
 }
 function calculatingcost(capacity, numberofpanels){
   if(capacity>10){
     return (470000*numberofpanels);
   }
   return solarSystemCosts[capacity-1]*numberofpanels;
+}
+function finalcostaftermaintainance(temptime, totalcost){
+  // Taking 2500 for maintainance cost for simplicity here
+  let costoffinal= (temptime*(totalcost))+ (temptime*2500);
+  return costoffinal;
 }
 async function main() {
   await mongoose.connect(MONGO_URL);
@@ -47,7 +60,8 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
 app.get('/', (req, res)=>{
-    res.render('home');
+    res.render('tempresult');
+    // this tempresult is the new home page
 });
 app.get('/form', (req, res)=>{
     res.render('form');
@@ -76,14 +90,13 @@ app.get('/solarcal', (req, res)=>{
 app.post('/solarcal', (req, res)=>{
   let solardata= req.body;
   console.log(solardata);
-  let roofArea= solardata.roofarea;
-  let numberofpanels=  calculateSolarPanelCount(roofArea, 0.3);
-  // Assuming 30% percent efficiency here
-  console.log(numberofpanels);
-  let requiredenergypersolarpanel= Math.floor(solardata.requiredusage/(numberofpanels));
-  console.log(requiredenergypersolarpanel);
-  let totalcost=calculatingcost(requiredenergypersolarpanel, numberofpanels);
-  res.render('solarcalculated', {numberofpanels, requiredenergypersolarpanel, totalcost});
+  let numberofpanels= calculateSolarPanels(parseInt(solardata.requiredusage));
+  let capacityofeachpanel= capacityofsolarpanel(parseInt(solardata.requiredusage));
+  let costofinstallation= calculatingcost(capacityofeachpanel, numberofpanels);
+  let monthlycost= parseInt(solardata.bill);
+  let timeinmonths= (costofinstallation/monthlycost).toFixed(2);
+  let timeinyears= timeinmonths/12;
+  res.render('solarcalculated', {numberofpanels, capacityofeachpanel, costofinstallation, timeinyears});
 })
 app.listen(3000, ()=>{
     console.log('App is listening to port 3000');
@@ -126,13 +139,13 @@ const indianStates = [
   "Puducherry"
 ];
 const solarSystemCosts=[
-  70000,
-  125000,
-  170000,
-  205000,
-  295000,
-  325000,
-  380000,
-  415000,
-  460000
+  65000,
+  105000,
+  150000,
+  185000,
+  230000,
+  285000,
+  315000,
+  405000,
+  450000
 ];

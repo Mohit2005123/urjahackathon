@@ -3,43 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Solar Panel Calculation Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+            background-color: #15172b;
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+          
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+      #head{
+        font-size: 30px;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        color: #15172b; /* Change color as needed */
+        text-align: center;
+        margin-top: 20px; /* Adjust margin as needed */
+        margin-bottom: 20px;
+      }
+    </style>
 </head>
 <body>
-    <form action="/solarcal" method="post">
-        <label for="state">Your state</label>
-        <select name="state" id="state">
-            <% for (let i=0; i<indianStates.length; i++){ %>
-                <option value="<%=indianStates[i]%>"> <%=indianStates[i]%> </option>
-          <%  } %> 
-        </select>
-        <br> <br>
-        <label for="category">Your category</label>
-        <select name="category" id="categort">
-            <option value="Residential">Residential</option>
-            <option value="Instituional">Instituional</option>
-            <option value="Industrial">Industrial</option>
-            <option value="Commercial">Commercial</option>
-            <option value="Government">Government</option>
-            <option value="Social Sector">Social Sector</option>
-        </select>
-        <br> <br>
-        <label for="bill"> Your monthly average bill </label>
-        <input type="text" name="bill">
-        <br> <br>
-        <label for="roofarea">
-            Total Available Roof Top Area
-        </label>
-        <input type="text" name="roofarea" placeholder="Square Meters">
-        <br> <br> 
-        <label for="requiredusage">Required Solar Plant Capacity</label>
-        <input type="text" name="requiredusage" placeholder="KW" >
-        <br> <br> 
-        <button>Submit </button>
-    </form>
-
-    <script>
-        
-    </script>
+    <div class="container">
+        <h2 id="head">Solar Panel Calculation Form</h2>
+        <form action="/solarcal" method="post">
+            <label for="state">Your State</label>
+            <select name="state" id="state">
+                <% for (let i=0; i<indianStates.length; i++) { %>
+                    <option value="<%=indianStates[i]%>"><%=indianStates[i]%></option>
+                <% } %>
+            </select>
+            <br><br>
+            <label for="category">Your Category</label>
+            <select name="category" id="category">
+                <option value="Residential">Residential</option>
+                <option value="Institutional">Institutional</option>
+                <option value="Industrial">Industrial</option>
+                <option value="Commercial">Commercial</option>
+                <option value="Government">Government</option>
+                <option value="Social Sector">Social Sector</option>
+            </select>
+            <br><br>
+            <label for="bill">Your Monthly Average Bill</label>
+            <input type="text" name="bill">
+            <br><br>
+            <label for="roofarea">Total Available Roof Top Area</label>
+            <input type="text" name="roofarea" placeholder="Square Meters">
+            <br><br>
+            <label for="requiredusage">Required Solar Plant Capacity</label>
+            <input type="text" name="requiredusage" placeholder="KW">
+            <br><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
 </body>
 </html>

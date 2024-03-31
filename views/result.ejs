@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Electricity Consumption</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 <body>
-    <p>
+    <p style="font-size: 18px; color: #15172b; text-align: center;">
         <%=text%>
     </p>
 
-    <p>
+    <!-- Keep the space for readability kkk-->
 
-    </p>
-    <div id="myChart" style="width:100%; max-width:600px; height:500px;"></div>
+    <div id="myChart" style="width: 100%; max-width: 800px; height: 500px; margin: 0 auto;"></div>
+    <!-- Adjusted width, added margin for centering -->
+
     <script>
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
 
-function decodeEntities(encodedString) {
+        function decodeEntities(encodedString) {
             var textArea = document.createElement('textarea');
             textArea.innerHTML = encodedString;
             return textArea.value;
@@ -26,11 +29,7 @@ function decodeEntities(encodedString) {
         var encodedJSON = '<%= JSON.stringify(obj) %>';
         var decodedJSON = decodeEntities(encodedJSON);
         var obj = JSON.parse(decodedJSON);
-        console.log(obj);
-      // const objdata = JSON.parse('<%= JSON.stringify(obj) %>');
-      // console.log(objdata);
-        google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
+
         function drawChart() {
             const data = google.visualization.arrayToDataTable([
                 ['Months', 'Kwh'],
@@ -49,7 +48,13 @@ function decodeEntities(encodedString) {
             ]);
 
             const options = {
-                title: 'Electricity Consumption'
+                title: 'Electricity Consumption',
+                colors: ['#4285F4'], // Customize colors
+                legend: { position: 'none' }, // Hide legend
+                chartArea: { width: '80%', height: '70%' }, // Adjust chart area size
+                hAxis: { title: 'Kwh', titleTextStyle: { color: '#333' } }, // Customize horizontal axis
+                vAxis: { title: 'months', titleTextStyle: { color: '#333' } }, // Customize vertical axis
+                animation: { duration: 1000, easing: 'out' } // Add animation
             };
 
             const chart = new google.visualization.BarChart(document.getElementById('myChart'));
